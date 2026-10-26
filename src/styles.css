@@ -862,6 +862,6 @@ html, body { color: #f6eefc; }
 @keyframes hw-blink { 0%, 93% { transform: scaleY(0); } 94%, 97% { transform: scaleY(1); } 98% { transform: scaleY(0); } }
 @media (prefers-reduced-motion: reduce) { .hw-eyelid, .hw-mouth { animation: none !important; } }
 
-.bd-music-toggle { position: fixed; right: 0.75rem; bottom: 5.5rem; z-index: 60; display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 9999px; color: oklch(0.95 0.02 80); background: oklch(0.2 0.03 300 / 0.75); border: 1px solid oklch(1 0 0 / 0.15); backdrop-filter: blur(8px); transition: transform 0.2s, opacity 0.2s; }
+.bd-music-toggle { position: fixed; right: 0.75rem; bottom: 5.5rem; z-index: 40; display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 9999px; color: oklch(0.95 0.02 80); background: oklch(0.2 0.03 300 / 0.75); border: 1px solid oklch(1 0 0 / 0.15); backdrop-filter: blur(8px); transition: transform 0.2s, opacity 0.2s; }
 .bd-music-toggle[data-on="false"] { opacity: 0.55; }
 .bd-music-toggle:active { transform: scale(0.9); }
