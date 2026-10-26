@@ -1,0 +1,1 @@
+CREATE TABLE public.probe_backend_identity (id int);
