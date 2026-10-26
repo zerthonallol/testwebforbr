@@ -3,7 +3,7 @@ import { ArrowLeft, ArrowRight, Box, Coins, Ellipsis, Ghost, Package, Rocket, Sk
 import meowl from "@/assets/meowl-halloween.png"
 import { haptic } from "@/lib/telegram"
 import { isMuted, setMuted } from "@/lib/sound"
-import { blip, hush, meow, speak, startAmbient, stopAmbient, whoosh } from "@/lib/tour-sound"
+import { blip, hush, meow, stopAmbient, whoosh } from "@/lib/tour-sound"
 import { cn } from "@/lib/utils"
 
 /** Tabs the tour can jump to. Kept loose so the shell owns the real tab list. */
@@ -101,7 +101,7 @@ function useTypewriter(text: string, sound: boolean) {
     const t = setInterval(() => {
       i++
       setN(i)
-      if (sound && i % 3 === 0 && text[i] !== " ") blip()
+      if (sound && i % 2 === 0 && /[\p{L}]/u.test(text[i] ?? "")) blip(text[i])
       if (i >= text.length) clearInterval(t)
     }, 24)
     return () => clearInterval(t)
@@ -125,15 +125,12 @@ export function Onboarding({ onClose, onGo }: { onClose: () => void; onGo: (t: T
       hush()
       return
     }
-    startAmbient()
     return () => undefined
   }, [sound])
   useEffect(() => {
     if (!sound) return
     meow(1 + (i % 3) * 0.08)
-    const t = setTimeout(() => speak(`${step.title}. ${step.text}`), 450)
-    return () => clearTimeout(t)
-  }, [i, sound, step.title, step.text])
+  }, [i, sound])
   useEffect(
     () => () => {
       stopAmbient()
@@ -210,7 +207,12 @@ export function Onboarding({ onClose, onGo }: { onClose: () => void; onGo: (t: T
           </span>
           <div className="hw-meowl-wrap" key={`m${i}`} data-pose={step.pose}>
             <div className="hw-meowl-body" data-talking={!done}>
-              <img src={meowl} alt="Meowl" className="hw-meowl" draggable={false} />
+              <div className="hw-meowl-face">
+                <img src={meowl} alt="Meowl" className="hw-meowl" draggable={false} />
+                <span className="hw-eyelid hw-eyelid-l" aria-hidden />
+                <span className="hw-eyelid hw-eyelid-r" aria-hidden />
+                <span className="hw-mouth" aria-hidden />
+              </div>
             </div>
             <span className="hw-meowl-shadow" />
           </div>

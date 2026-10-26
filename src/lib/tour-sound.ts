@@ -44,20 +44,28 @@ export function meow(pitch = 1) {
   o.stop(t + 0.65)
 }
 
-/** Short typewriter blip while Meowl "talks". */
-export function blip() {
+/** Pixel "voice" syllable: an 8-bit chirp whose pitch follows the letter. No words. */
+export function blip(ch = "a") {
   const c = ac()
   if (!c || !out) return
   const t = c.currentTime
+  const code = ch.toLowerCase().charCodeAt(0)
+  const scale = [0, 2, 4, 7, 9, 12]
+  const base = 560 * Math.pow(2, scale[code % scale.length] / 12)
+  const vowel = /[аеёиоуыэюяaeiou]/i.test(ch)
+  const dur = vowel ? 0.075 : 0.05
   const o = c.createOscillator()
   const g = c.createGain()
   o.type = "square"
-  o.frequency.value = 620 + Math.random() * 260
-  g.gain.setValueAtTime(0.05, t)
-  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.05)
+  o.frequency.setValueAtTime(base * (0.96 + Math.random() * 0.08), t)
+  o.frequency.exponentialRampToValueAtTime(base * (vowel ? 1.18 : 0.85), t + dur)
+  g.gain.setValueAtTime(0.0001, t)
+  g.gain.exponentialRampToValueAtTime(0.07, t + 0.005)
+  g.gain.setValueAtTime(0.07, t + dur * 0.6)
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur)
   o.connect(g).connect(out)
   o.start(t)
-  o.stop(t + 0.06)
+  o.stop(t + dur + 0.02)
 }
 
 /** Airy whoosh between steps. */
@@ -121,28 +129,6 @@ export function stopAmbient() {
   ambient = null
 }
 
-/** Meowl reads the line aloud with a high cartoon voice. */
-export function speak(text: string) {
-  if (typeof window === "undefined" || isMuted() || !("speechSynthesis" in window)) return
-  try {
-    window.speechSynthesis.cancel()
-    const u = new SpeechSynthesisUtterance(text)
-    u.lang = "ru-RU"
-    u.pitch = 1.7
-    u.rate = 1.08
-    u.volume = 0.9
-    const ru = window.speechSynthesis.getVoices().find((v) => v.lang.startsWith("ru"))
-    if (ru) u.voice = ru
-    window.speechSynthesis.speak(u)
-  } catch {
-    /* ignore */
-  }
-}
-
 export function hush() {
-  try {
-    window.speechSynthesis?.cancel()
-  } catch {
-    /* ignore */
-  }
+  /* pixel voice stops on its own */
 }

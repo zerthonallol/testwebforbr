@@ -1,3 +1,4 @@
+import { MusicToggle } from "@/components/casino/MusicToggle";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -127,6 +128,7 @@ function RootComponent() {
       <TooltipProvider>
         <Outlet />
       </TooltipProvider>
+      <MusicToggle />
       <Toaster theme="dark" position="top-center" />
     </QueryClientProvider>
   );
